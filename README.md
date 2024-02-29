@@ -1,6 +1,19 @@
 # Discord Bot Workshop
-
 Welcome to the Discord Bot Workshop! In this workshop, you will learn the basics of creating a Discord bot using Python and the Discord.py library. Follow the steps below to set up and explore various features of bot development.
+
+## Prerequisites
+
+### Python
+This workshop will make use of Python to code a Discord bot. If you're unsure whether or not your ps has the language installed, type ``python3`` in the command line. If it displays an output similar to the picture below:
+![example](https://i.imgur.com/cKUj9FX.png)
+then you're good. If not, type ``sudo apt instal python3``
+
+### Python libraries
+We're going to use two different libraries, Dotenv and Discordpy during this workshop. As a result you need to make sure you have them installed:
+- Dotenv: ``python3 -m pip install python-dotenv``
+- Discordpy: ``python3 -m pip install -U discord.p``
+
+We will use Dotenv to read .env files in this workshop to store sensitive information. While Discordpy is the library we will use to make API calls to Discord during the crafting of the bot.
 
 ## Part 0: Creating the Discord application
 
@@ -61,7 +74,9 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 bot.run(TOKEN)
 ```
-If you want, you can modify ``command_prefix="!"`` to put a prefix of your like. 
+Here we opt to create a class to define what is our bot. Right now inside it we initialise our bot with the \_\_init__ function, and we also use the "on_ready" asynchronous function to print in the console a certain text when the bot is launched. Later down the line you will see we can add more functions in there if we wish to.
+
+(Already if you want, you can modify ``command_prefix="!"`` to put a prefix of your like. )
 
 With this code in, try launching your bot! Type ``python3 [your python file]`` in the command line, and see if your bot account shows up online. If it does, great! You can continue to the next steps.
 
@@ -128,7 +143,7 @@ class MyView(View):
 @bot.tree.command(name="interactive")
 async def interactive(ctx):
     view = MyView()
-    await ctx.send("Click on the button below!", view=view)
+    await ctx.response.send_message("Click on the button below!", view=view)
 ```
 
 
@@ -144,12 +159,12 @@ async def add_role(ctx, role: discord.Role, member: discord.Member):
         await ctx.send("The specified role does not exist.")
         return
     # fill this line with the function that adds the role to the member
-    await ctx.send(f"{member.mention} has been given the role {role.name}.")
+    await ctx.response.send_message(f"{member.mention} has been given the role {role.name}.")
 
 @bot.tree.command(name="remove_role")
 async def remove_role(ctx, role: discord.Role, member: discord.Member):
     # fill this line with the function that removes the role to the member
-    await ctx.send(f"{member.mention} has been removed from the role {role.name}.")
+    await ctx.response.send_message(f"{member.mention} has been removed from the role {role.name}.")
 ```
 
 If you've succeeded in this, let's spice it up! Create a command that generates a button. When you click on this button, it will give you the role you created.
@@ -183,17 +198,48 @@ Moderation commands are crucial for generalist-type bots. They aim to make easie
 @bot.tree.command(name="kick", permissions="kick_members")
 async def kick(ctx, member: discord.Member, reason: str = "No reason provided"):
     # Implement kick functionality here
-    await ctx.send(f"{member.mention} has been kicked. Reason: {reason}")
+    await ctx.response.send_message(f"{member.mention} has been kicked. Reason: {reason}")
 
 @bot.tree.command(name="ban", permissions="ban_members")
 async def ban(ctx, member: discord.Member, reason: str = "No reason provided"):
     # Implement ban functionality here
-    await ctx.send(f"{member.mention} has been banned. Reason: {reason}")
+    await ctx.response.send_message(f"{member.mention} has been banned. Reason: {reason}")
 
 @bot.tree.command(name="mute", permissions="mute_members")
 async def mute(ctx, member: discord.Member):
     # Implement mute functionality here
-    await ctx.send(f"{member.mention} has been muted.")
+    await ctx.response.send_message(f"{member.mention} has been muted.")
 ```
 
 Once you have implemented the commands and launched the bot once again, invite me to the Discord server (my Discord username is @altys). When I join, try to kick me with the bot!
+
+## Part 8: Limiting access to commands
+
+Sometimes you want your commands to only be accessible to certain people. As an example we will take the limitation "is owner of the Bot" to lock a certain command. The syntax for these type of limitations is simple, see below:
+
+First we need to import those limitations:
+```python
+from discord.ext.commands import has_permissions, has_role, is_owner
+```
+Now let's look again at our ``shutdown`` function and make it so only you can use it:
+```python
+@bot.tree.command(name="shutdhown", description="Shuts down the bot")
+@is_owner()
+async def shutdown(ctx):
+    await ctx.response.send_message("Shutting down the bot...")
+    await bot.close()
+```
+Now try inviting another member of the workshop to see if they can shut down the bot! You'll see, they won't.
+
+## Part 9: Beyond a simple bot
+Sending messages, adding and removing roles, and banning users are fairly simple actions to code. Thus if you want to spice it up, here's a list of ideas you can try to implement:
+### Generalist bot discord
+Dyno, Tatsu, Carlbot. Those names ring a bell? If not, know they're all generalist bots offering a wide array of features to enhance your server. You can go look at their documentations to take inspiration from them and try to recode some of them:
+- [Dyno Documentation](https://dyno.gg/commands)
+- [Tatsu Documentation](https://support.tatsu.gg/hc/en-us/articles/900007295883-List-of-Tatsu-Commands)
+- [Carlbot Documentation](https://docs.carl.gg/#/)
+
+### Specialist bot discord
+There's something specific you want your bot to do? Show newly uploaded YouTube videos, play mini-games with friends, display information retrieved from external API calls to a site you're using, etc. A lot can be done! 
+
+To give you a visible example of a specialist, and in this case niche Discord bot, you can look at my [LemanNS](https://github.com/ThibaultLafont/LemanNS) repository. It is a work-in-progress Discord bot making use of the [NationStates API](https://www.nationstates.net/pages/api.html) as well as [SQLite](https://www.sqlite.org/docs.html) databases, made for the site of the same name. You're looking for the ``instance.py`` file for all the Discord Bot-related code.
