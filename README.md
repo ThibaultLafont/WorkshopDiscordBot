@@ -98,7 +98,7 @@ async def ping(ctx):
 async def say(ctx, *, message):
     await ctx.send(message)
 
-@bot.command(name="shutdhown")
+@bot.command(name="shutdown")
 async def shutdown(ctx):
     await ctx.send("Shutting down the bot...")
     await bot.close()
