@@ -12,7 +12,7 @@ then you're good. If not, type ``sudo apt instal python3``
 ### Python libraries
 We're going to use two different libraries, Dotenv and Discordpy during this workshop. As a result you need to make sure you have them installed:
 - Dotenv: ``python3 -m pip install python-dotenv``
-- Discordpy: ``python3 -m pip install -U discord.p``
+- Discordpy: ``python3 -m pip install -U discord.py``
 
 We will use Dotenv to read .env files in this workshop to store sensitive information. While Discordpy is the library we will use to make API calls to Discord during the crafting of the bot.
 
