@@ -136,10 +136,10 @@ Interactive components, such as buttons, allow users to interact with your bot i
 
 ```python
 # Interactive components
-class MyView(View):
-    @bot.button(label="Click me", custom_id="button_click")
-    async def on_button_click(self, button, interaction):
-        await interaction.response.send_message("Button clicked!")
+class MyView(discord.ui.View):
+    @discord.ui.button(label="Click me", custom_id="button_click")
+    async def on_button_click(self, interaction, button):
+        await interaction.response.send_message("Button clicked!", ephemeral=True)
 
 @bot.tree.command(name="interactive")
 async def interactive(ctx):
