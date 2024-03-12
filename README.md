@@ -7,7 +7,7 @@ Welcome to the Discord Bot Workshop! In this workshop, you will learn the basics
 This workshop will make use of Python to code a Discord bot. If you're unsure whether or not your ps has the language installed, type ``python3`` in the command line. If it displays an output similar to the picture below:
 ![example](https://i.imgur.com/cKUj9FX.png)
 
-then you're good. If not, type ``sudo apt instal python3``
+then you're good. If not, type ``sudo apt install python3``
 
 ### Python libraries
 We're going to use two different libraries, Dotenv and Discordpy during this workshop. As a result you need to make sure you have them installed:
