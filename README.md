@@ -189,6 +189,7 @@ async def on_member_join(member):
     # Replace with your welcome channel ID
     # Implement the welcome message sender here 
 ```
+Now try inviting me or another member of the workshop to see if this works!
 
 ## Part 7: Moderation Commands
 
@@ -196,18 +197,18 @@ Moderation commands are crucial for generalist-type bots. They aim to make easie
 
 ```python
 # Moderation commands
-@bot.tree.command(name="kick", permissions="kick_members")
+@bot.tree.command(name="kick", description="Kick a member")
 async def kick(ctx, member: discord.Member, reason: str = "No reason provided"):
     # Implement kick functionality here
     await ctx.response.send_message(f"{member.mention} has been kicked. Reason: {reason}")
 
-@bot.tree.command(name="ban", permissions="ban_members")
+@bot.tree.command(name="ban", description="Ban a member")
 async def ban(ctx, member: discord.Member, reason: str = "No reason provided"):
     # Implement ban functionality here
     await ctx.response.send_message(f"{member.mention} has been banned. Reason: {reason}")
 
-@bot.tree.command(name="mute", permissions="mute_members")
-async def mute(ctx, member: discord.Member):
+@bot.tree.command(name="mute", description="Mute a member")
+async def mute(ctx, member: discord.Member, time: int, reason: str = "No reason provided"):
     # Implement mute functionality here
     await ctx.response.send_message(f"{member.mention} has been muted.")
 ```
@@ -225,14 +226,49 @@ from discord.ext.commands import has_permissions, has_role, is_owner
 Now let's look again at our ``shutdown`` function and make it so only you can use it:
 ```python
 @bot.tree.command(name="shutdhown", description="Shuts down the bot")
-@is_owner()
 async def shutdown(ctx):
-    await ctx.response.send_message("Shutting down the bot...")
-    await bot.close()
+    if await bot.is_owner(ctx.user):
+        await ctx.response.send_message("Shutting down the bot...")
+        await bot.close()
+    else:
+        await ctx.response.send_message("You are not authorized to use this command.")
 ```
 Now try inviting another member of the workshop to see if they can shut down the bot! You'll see, they won't.
 
-## Part 9: Beyond a simple bot
+## Part 9: Embed messages
+An embed is a special message format that allows you to create rich and visually appealing messages. The code snippet below demonstrates how to create and send an embed.
+
+```python
+@bot.tree.command(name="embed")
+async def embed(ctx):
+    # Creating an Embed object
+    embed = discord.Embed(
+        title="This is an embed",               # Set the title of the embed
+        description="This is a description",   # Set the description of the embed
+        color=discord.Color.blurple()           # Set the color of the embed
+    )
+    
+    # Setting the author information
+    embed.set_author(name=ctx.user.display_name, icon_url=ctx.user.avatar)
+    
+    # Setting the thumbnail image
+    embed.set_thumbnail(url=ctx.user.avatar)
+    
+    # Adding fields to the embed
+    embed.add_field(name="Field 1", value="Value 1", inline=False)
+    embed.add_field(name="Field 2", value="Value 2", inline=False)
+    
+    # Setting the footer text
+    embed.set_footer(text="This is a footer")
+    
+    # Sending the embed as a response
+    await ctx.response.send_message(embed=embed)
+```
+
+Try to use the command and see what it does. If it works, edit the code to try and customise your embed! 
+
+
+## Part 10: Beyond a simple bot
 Sending messages, adding and removing roles, and banning users are fairly simple actions to code. Thus if you want to spice it up, here's a list of ideas you can try to implement:
 ### Generalist bot discord
 Dyno, Tatsu, Carlbot. Those names ring a bell? If not, know they're all generalist bots offering a wide array of features to enhance your server. You can go look at their documentations to take inspiration from them and try to recode some of them:
@@ -244,3 +280,7 @@ Dyno, Tatsu, Carlbot. Those names ring a bell? If not, know they're all generali
 There's something specific you want your bot to do? Show newly uploaded YouTube videos, play mini-games with friends, display information retrieved from external API calls to a site you're using, etc. A lot can be done! 
 
 To give you a visible example of a specialist, and in this case niche Discord bot, you can look at my [LemanNS](https://github.com/ThibaultLafont/LemanNS) repository. It is a work-in-progress Discord bot making use of the [NationStates API](https://www.nationstates.net/pages/api.html) as well as [SQLite](https://www.sqlite.org/docs.html) databases, made for the site of the same name. You're looking for the ``instance.py`` file for all the Discord Bot-related code.
+### Other documenations
+Just for convenience, here's other documentation links you could use:
+- [Discord API Documentation](https://discord.com/developers/docs/intro)
+- [DiscordPY Documentation](https://discordpy.readthedocs.io/en/stable/index.html) (the "Manuals" section is where everything you need to know is linked)
