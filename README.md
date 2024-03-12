@@ -223,7 +223,16 @@ First we need to import those limitations:
 ```python
 from discord.ext.commands import has_permissions, has_role, is_owner
 ```
-Now let's look again at our ``shutdown`` function and make it so only you can use it:
+Second, remember the "Bot" class we made at the beginning? We need to add additional information to it. Specifically to this line:
+```python
+super().__init__(command_prefix="!", intents=intents, case_sensitive=True)
+```
+We need to add another parameter called ``owner_id``. It should look like this:
+```python
+super().__init__(command_prefix="!", intents=intents, case_sensitive=True, owner_id=REPLACE_WITH_YOUR_ID)
+```
+
+Now your bot only recognises the discord account whose ID is the one you gave in the code as its owner. This is important in cases where you wish to limit bot commands to only you. For example, let's look again at our ``shutdown`` command and make it so only you can use it:
 ```python
 @bot.tree.command(name="shutdhown", description="Shuts down the bot")
 async def shutdown(ctx):
@@ -234,6 +243,8 @@ async def shutdown(ctx):
         await ctx.response.send_message("You are not authorized to use this command.")
 ```
 Now try inviting another member of the workshop to see if they can shut down the bot! You'll see, they won't.
+
+Bonus: see how I also told you to import ``has_permissions`` and ``has_role``? Try to fiddle with it!
 
 ## Part 9: Embed messages
 An embed is a special message format that allows you to create rich and visually appealing messages. The code snippet below demonstrates how to create and send an embed.
